@@ -130,8 +130,3 @@ dmypy.json
 
 # .idea
 .idea
-
-# папки со статикой и медиа
-static/
-posts/static/
-media/
