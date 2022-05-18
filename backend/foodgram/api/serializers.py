@@ -237,6 +237,7 @@ class FollowPostSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     cooking_time = serializers.SerializerMethodField()
@@ -254,6 +255,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
                 'Уже добавлено в избранное!')
         return data
 
+    def get_id(self, obj):
+        return obj.recipe.id
+
     def get_name(self, obj):
         return obj.recipe.name
 
@@ -266,6 +270,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     cooking_time = serializers.SerializerMethodField()
@@ -282,6 +287,9 @@ class CartSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Уже добавлено в список покупок!')
         return data
+
+    def get_id(self, obj):
+        return obj.recipe.id
 
     def get_name(self, obj):
         return obj.recipe.name
