@@ -5,9 +5,8 @@ from users.models import CustomUser
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150)
     measurement_unit = models.CharField(max_length=50)
-    link = "Edit"
 
     def __str__(self):
         return self.name
@@ -16,8 +15,7 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=150, unique=True)
     color = models.CharField(max_length=50)
-    slug = models.CharField(max_length=50, unique=True)
-    link = "Edit"
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
@@ -51,7 +49,6 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient, through=RecipeIngredient)
     tags = models.ManyToManyField(
         Tag, related_name='recipes')
-    link = "Edit"
 
     class Meta:
         ordering = ['-pub_date']
@@ -71,7 +68,6 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='followers'
     )
-    link = "Edit"
 
     class Meta:
         constraints = [
@@ -100,7 +96,6 @@ class Favorite(models.Model):
         on_delete=models.CASCADE,
         related_name='favorites'
     )
-    link = "Edit"
 
     class Meta:
         constraints = [
@@ -125,7 +120,6 @@ class Cart(models.Model):
         on_delete=models.CASCADE,
         related_name='in_cart'
     )
-    link = "Edit"
 
     class Meta:
         constraints = [

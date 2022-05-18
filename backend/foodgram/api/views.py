@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
@@ -7,6 +6,7 @@ from rest_framework.pagination import (LimitOffsetPagination,
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .filters import RecipeFilter
 from .models import (Cart, CustomUser, Favorite, Follow, Ingredient, Recipe,
                      RecipeIngredient, Tag)
 from .permissions import IsAuthorOrReadOnly
@@ -14,20 +14,6 @@ from .serializers import (CartSerializer, FavoriteSerializer,
                           FollowPostSerializer, FollowsSerializer,
                           IngredientSerializer, RecipePostSerializer,
                           RecipeSerializer, TagSerializer)
-
-
-class RetrieveList(mixins.ListModelMixin,
-                   mixins.RetrieveModelMixin,
-                   viewsets.GenericViewSet):
-    pass
-
-
-class CreateRetrieveDelete(mixins.CreateModelMixin,
-                           mixins.RetrieveModelMixin,
-                           mixins.ListModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    pass
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -39,21 +25,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly & IsAuthorOrReadOnly
     ]
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('tags', 'author')
+    filterset_class = RecipeFilter
 
     def get_queryset(self):
         queryset = Recipe.objects.all()
         user = self.request.user
         query_params = self.request.query_params
         is_favorited = query_params.get('is_favorited')
-        in_cart = query_params.get('in_cart')
+        is_in_shopping_cart = query_params.get('is_in_shopping_cart')
         if user.is_authenticated and is_favorited:
             favorite_recipes_id = (
                 user.favorites.all()
             ).values_list('recipe__id', flat=True).distinct()
             queryset = Recipe.objects.filter(id__in=favorite_recipes_id)
             return queryset
-        if user.is_authenticated and in_cart:
+        if user.is_authenticated and is_in_shopping_cart:
             in_cart_recipes_id = (
                 user.in_cart.all()
             ).values_list('recipe__id', flat=True).distinct()
@@ -73,7 +59,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    # permission_classes = 123
     pagination_class = LimitOffsetPagination
     filter_backends = (filters.SearchFilter,)
     search_fields = ('^name',)
@@ -186,8 +171,11 @@ class CartListView(APIView):
                 list[f'{ingredient.ingredient.name}'] += ingredient.amount
             else:
                 list[f'{ingredient.ingredient.name}'] = ingredient.amount
-        with open(settings.MEDIA_ROOT + '/myshoppingcart.txt', 'w+') as f:
-            # Не дает добавить + /carts/ между ними
+        with open(
+            'api/carts/myshoppingcart.txt',
+            'w+',
+            encoding="utf-8"
+        ) as f:
             for key, value in list.items():
                 f.write('%s:%s\n' % (key, value))
             response = HttpResponse(f, content_type='text/plain')

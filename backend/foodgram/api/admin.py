@@ -8,17 +8,17 @@ class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
 
 
+@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'author', 'text', 'cooking_time',)
     list_display = (
         'id', 'name',
         'author', 'text',
         'cooking_time', 'image',
-        'favorite_count', 'link'
+        'favorite_count',
     )
     list_editable = ('name', 'author', 'text', 'cooking_time', 'image',)
     list_filter = ('name', 'author', 'cooking_time', 'tags',)
-    list_display_links = ('link',)
     inlines = (RecipeIngredientInline,)
     read_only_fields = ('favorite_count',)
 
@@ -26,47 +26,39 @@ class RecipeAdmin(admin.ModelAdmin):
         return instance.favorites.count()
 
 
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     search_fields = ('name',)
-    list_display = ('id', 'name', 'slug', 'color', 'link',)
+    list_display = ('id', 'name', 'slug', 'color',)
     list_editable = ('name', 'slug', 'color',)
     list_filter = ('name', 'slug', 'color',)
     prepopulated_fields = {"slug": ("name",)}
-    list_display_links = ('link',)
 
 
+@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('name',)
-    list_display = ('id', 'name', 'link',)
+    list_display = ('id', 'name',)
     list_editable = ('name',)
     list_filter = ('name',)
-    list_display_links = ('link',)
 
 
+@admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     search_fields = ('user', 'author',)
-    list_display = ('user', 'author', 'link',)
+    list_display = ('id', 'user', 'author',)
     list_filter = ('user', 'author',)
-    list_display_links = ('link',)
 
 
+@admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     search_fields = ('user',)
-    list_display = ('id', 'user', 'recipe', 'link',)
+    list_display = ('id', 'user', 'recipe',)
     list_filter = ('user', 'recipe',)
-    list_display_links = ('link',)
 
 
+@admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     search_fields = ('user',)
-    list_display = ('id', 'user', 'recipe', 'link',)
+    list_display = ('id', 'user', 'recipe',)
     list_filter = ('user', 'recipe',)
-    list_display_links = ('link',)
-
-
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Follow, FollowAdmin)
-admin.site.register(Favorite, FavoriteAdmin)
-admin.site.register(Cart, CartAdmin)

@@ -111,7 +111,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer(read_only=True)
     tags = TagSerializer(read_only=True, many=True)
     is_favorited = serializers.SerializerMethodField()
-    is_in_cart = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
@@ -119,7 +119,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'author', 'image',
             'text', 'ingredients',
             'tags', 'cooking_time',
-            'is_favorited', 'is_in_cart',
+            'is_favorited', 'is_in_shopping_cart',
         )
         model = Recipe
 
@@ -129,11 +129,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             return user.favorites.filter(recipe=obj).exists()
         return False
 
-    def get_is_in_cart(self, obj):
+    def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
         if user.is_authenticated:
             return user.in_cart.filter(recipe=obj).exists()
         return False
+
+    def to_representation(self, instance):
+        response = super(RecipeSerializer, self).to_representation(instance)
+        response['image'] = instance.image.url
+        return response
 
 
 class FollowsSerializer(CustomUserSerializer):
@@ -253,9 +258,8 @@ class FavoriteSerializer(serializers.ModelSerializer):
         return obj.recipe.name
 
     def get_image(self, obj):
-        request = self.context.get('request')
         image_url = obj.recipe.image.url
-        return request.build_absolute_uri(image_url)
+        return image_url
 
     def get_cooking_time(self, obj):
         return obj.recipe.cooking_time
@@ -283,9 +287,8 @@ class CartSerializer(serializers.ModelSerializer):
         return obj.recipe.name
 
     def get_image(self, obj):
-        request = self.context.get('request')
         image_url = obj.recipe.image.url
-        return request.build_absolute_uri(image_url)
+        return image_url
 
     def get_cooking_time(self, obj):
         return obj.recipe.cooking_time
