@@ -17,7 +17,7 @@ services:
       - ../.env 
 
   django:
-    build: ../backend/foodgram
+    image: kiselaw/foodgram:v1 #build: ../backend/foodgram
     restart: always
     volumes:
       - static_value_django:/app/django_static/
