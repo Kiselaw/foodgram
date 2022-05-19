@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from .filters import RecipeFilter
 from .models import (Cart, CustomUser, Favorite, Follow, Ingredient, Recipe,
                      RecipeIngredient, Tag)
-from .permissions import IsAuthorOrReadOnly
+# from .permissions import IsAuthorOrReadOnly
 from .serializers import (CartSerializer, FavoriteSerializer,
                           FollowPostSerializer, FollowsSerializer,
                           IngredientSerializer, RecipePostSerializer,
@@ -21,9 +21,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = PageNumberPagination
     http_method_names = ['get', 'post', 'delete', 'head', 'patch', 'options']
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly & IsAuthorOrReadOnly
-    ]
+    # permission_classes = [
+    #    permissions.IsAuthenticatedOrReadOnly & IsAuthorOrReadOnly
+    # ]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
