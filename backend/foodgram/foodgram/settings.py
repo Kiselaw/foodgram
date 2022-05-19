@@ -139,5 +139,10 @@ DJOSER = {
     'SERIALIZERS': {
         'user': 'users.serializers.CustomUserSerializer',
         'current_user': 'users.serializers.CustomUserSerializer'
+    },
+    'HIDE_USERS': False,
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.IsAdminUser'],
     }
 }

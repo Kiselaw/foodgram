@@ -62,12 +62,14 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = LimitOffsetPagination
     filter_backends = (filters.SearchFilter,)
     search_fields = ('^name',)
+    permission_classes = [permissions.AllowAny]
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     pagination_class = LimitOffsetPagination
+    permission_classes = [permissions.AllowAny]
 
 
 class FollowsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
