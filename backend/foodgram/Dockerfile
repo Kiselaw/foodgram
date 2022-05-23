@@ -10,9 +10,9 @@ RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
 COPY . /app 
 
-COPY carts/ /app
+COPY ./carts /app
 
-COPY fixtures/ /app
+COPY ./fixtures /app
  
 WORKDIR /app 
 
