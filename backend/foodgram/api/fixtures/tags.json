@@ -1,0 +1,32 @@
+[
+    {
+        "model": "api.Tag",
+        "pk": 1,
+        "fields": {
+            "id": 0,
+            "name": "Завтрак",
+            "color": "#E26C2D",
+            "slug": "breakfast"
+        }
+    },
+    {
+        "model": "api.Tag",
+        "pk": 2,
+        "fields": {
+            "id": 1,
+            "name": "Обед",
+            "color": "#001763",
+            "slug": "lunch"
+        }
+    },
+    {
+        "model": "api.Tag",
+        "pk": 3,
+        "fields": {
+            "id": 1,
+            "name": "Ужин",
+            "color": "#0f6300",
+            "slug": "dinner"
+        }
+    }
+]

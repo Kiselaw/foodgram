@@ -6,8 +6,6 @@ load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# тесттесттесттесттесттесттесттест
-
 SECRET_KEY = os.getenv('SECRET_KEY', default='default_secret_key')
 
 DEBUG = True
@@ -74,10 +72,10 @@ DATABASES = {
     }
 }
 # DATABASES = {
-# 'default': {
-# 'ENGINE': 'django.db.backends.sqlite3',
-# 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-# }
+#    'default': {
+#       'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
 # }
 
 # Пока оставляю, дабы в случае чего тестировать локально - не в контейнерах
@@ -117,8 +115,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    # 'rest_framework.permissions.IsAuthenticated', ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication', ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -141,8 +139,5 @@ DJOSER = {
         'current_user': 'users.serializers.CustomUserSerializer'
     },
     'HIDE_USERS': False,
-    'PERMISSIONS': {
-        'user': ['rest_framework.permissions.AllowAny'],
-        'user_list': ['rest_framework.permissions.IsAdminUser'],
-    }
+    'PERMISSIONS': {'user': ['api.permissions.IsUserOrReadonly']}
 }

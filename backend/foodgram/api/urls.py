@@ -22,8 +22,8 @@ router.register(r'recipes/(?P<recipe_id>\d+)/shopping_cart',
                 CartViewSet, basename='shopping_cart')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('', include('djoser.urls')),
-    path('recipes/download_shopping_cart', CartListView.as_view()),
+    path('recipes/download_shopping_cart/', CartListView.as_view()),
+    path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
 ]

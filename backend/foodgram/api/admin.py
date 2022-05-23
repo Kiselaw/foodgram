@@ -38,8 +38,8 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('name',)
-    list_display = ('id', 'name',)
-    list_editable = ('name',)
+    list_display = ('id', 'name', 'measurement_unit')
+    list_editable = ('name', 'measurement_unit')
     list_filter = ('name',)
 
 

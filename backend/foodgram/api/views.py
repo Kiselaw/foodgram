@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from .filters import RecipeFilter
 from .models import (Cart, CustomUser, Favorite, Follow, Ingredient, Recipe,
                      RecipeIngredient, Tag)
-# from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthorOrReadOnly
 from .serializers import (CartSerializer, FavoriteSerializer,
                           FollowPostSerializer, FollowsSerializer,
                           IngredientSerializer, RecipePostSerializer,
@@ -21,10 +21,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = PageNumberPagination
     http_method_names = ['get', 'post', 'delete', 'head', 'patch', 'options']
-    # permission_classes = [
-    #    permissions.IsAuthenticatedOrReadOnly & IsAuthorOrReadOnly
-    # ]
+    permission_classes = [IsAuthorOrReadOnly]
     filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ['author']
     filterset_class = RecipeFilter
 
     def get_queryset(self):
@@ -33,11 +32,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         query_params = self.request.query_params
         is_favorited = query_params.get('is_favorited')
         is_in_shopping_cart = query_params.get('is_in_shopping_cart')
+        tags = query_params.getlist('tags')
         if user.is_authenticated and is_favorited:
             favorite_recipes_id = (
                 user.favorites.all()
             ).values_list('recipe__id', flat=True).distinct()
             queryset = Recipe.objects.filter(id__in=favorite_recipes_id)
+            if tags:
+                queryset = Recipe.objects.filter(
+                    id__in=favorite_recipes_id, tags__slug__in=tags
+                ).distinct()
             return queryset
         if user.is_authenticated and is_in_shopping_cart:
             in_cart_recipes_id = (
@@ -63,6 +67,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('^name',)
     permission_classes = [permissions.AllowAny]
+    pagination_class = None
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -70,10 +75,12 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = [permissions.AllowAny]
+    pagination_class = None
 
 
 class FollowsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = FollowsSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -88,6 +95,7 @@ class FollowsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 class FollowViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
                     viewsets.GenericViewSet):
     serializer_class = FollowPostSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         follower = self.request.user
@@ -112,6 +120,7 @@ class FollowViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
 class FavoriteViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
                       viewsets.GenericViewSet):
     serializer_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -136,6 +145,7 @@ class FavoriteViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
 class CartViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     serializer_class = CartSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -158,6 +168,7 @@ class CartViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
 
 
 class CartListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         user = self.request.user
@@ -174,14 +185,15 @@ class CartListView(APIView):
             else:
                 list[f'{ingredient.ingredient.name}'] = ingredient.amount
         with open(
-            'api/carts/myshoppingcart.txt',
+            'api/carts/shopping-list.txt',
             'w+',
             encoding="utf-8"
         ) as f:
             for key, value in list.items():
                 f.write('%s:%s\n' % (key, value))
-            response = HttpResponse(f, content_type='text/plain')
-            response['Content-Disposition'] = (
-                'attachment; filename=myshoppingcart.txt'
-            )
+        file = open('api/carts/shopping-list.txt', 'rb')
+        response = HttpResponse(file, content_type='text/plain')
+        response['Content-Disposition'] = (
+            'attachment; filename=shopping-list.txt'
+        )
         return response
