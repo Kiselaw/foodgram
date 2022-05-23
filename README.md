@@ -87,6 +87,15 @@ python3 manage.py csv_import --<команда> <адрес_файла>
 --ingredient - команда для загрузки ингредиентов из файла
 ```
 
+### Команды предзаполения объектами базы данных 
+
+```bash
+py manage.py loadata <название_файла>
+
+tags.json - команда для загрузки тегов
+users.json - команда для загрузки пользователей
+```
+
 ## Примеры запросов к API
 
 ### Алгоритм регистрации пользователей
@@ -103,10 +112,10 @@ python3 manage.py csv_import --<команда> <адрес_файла>
 ### Команды для запуска проекта в контейнерах:
 ```bash
 1. `docker-compose up -d --build` - сборка/пересборка контейнеров
-2. `winpty docker-compose exec web python manage.py makemigrations` - создание новых миграций
-3. `winpty docker-compose exec web python manage.py migrate` - применение миграций
-4. `winpty docker-compose exec web python manage.py createsuperuser` - создание суперпользователя
-5. `winpty docker-compose exec web python manage.py collectstatic --no-input` - собрать статические файлы
+2. `winpty docker-compose exec django python manage.py makemigrations` - создание новых миграций
+3. `winpty docker-compose exec django python manage.py migrate` - применение миграций
+4. `winpty docker-compose exec django python manage.py createsuperuser` - создание суперпользователя
+5. `winpty docker-compose exec django python manage.py collectstatic --no-input` - собрать статические файлы
 6. `docker-compose down -v` - остановка контейнеров и удаление зависимостей
 ```
 http://84.201.177.249/ - ссылка на развернутый в котейнерах проект на сервере
