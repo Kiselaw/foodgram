@@ -23,7 +23,7 @@
         "model": "api.Tag",
         "pk": 3,
         "fields": {
-            "id": 1,
+            "id": 2,
             "name": "Ужин",
             "color": "#0f6300",
             "slug": "dinner"
