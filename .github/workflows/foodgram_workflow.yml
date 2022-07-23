@@ -48,7 +48,7 @@ jobs:
         with:
           context: backend/foodgram/
           push: true
-          tags: kiselaw/foodgram:v1
+          tags: kiselaw/foodgram:v2
     
   deploy:
     runs-on: ubuntu-latest

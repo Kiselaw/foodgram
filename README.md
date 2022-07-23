@@ -1,11 +1,33 @@
-# Описание проекта FOODGRAM-PROJECT-REACT
+# Foodgram
 
-Проект **FOODGRAM-PROJECT-REACT** представляет собой платформу позволяющую пользователям делиться своими рецептами.
+The **Foodgram** project is a platform that allows users to share their recipes.
 
+## Overview
 
-## Установка. Как запустить проект:
+The foodgram platform implements all the basic functionality inherent in projects of this kind.
 
-### Клонировать репозиторий и перейти в него в командной строке:
+Users can:
+- register and create recipes
+- subscribe to other users, thus forming their own recipe feed
+- filter recipes by tags
+- add recipes to favorites and shopping list (which can be downloaded as a txt file)
+
+## Technologies
+Backend:
+
+- Python 3.9.5
+- Django
+- Djnago REST framework
+- Docker
+
+Frontend:
+
+- JavaScript
+- React
+
+## Installation and launch
+
+### Clone the repository and go to it using the command line:
 
 ```bash
 git clone https://github.com/Kiselaw/foodgram-project-react
@@ -13,7 +35,7 @@ git clone https://github.com/Kiselaw/foodgram-project-react
 cd foodgram-project-react
 ```
 
-### Cоздать и активировать виртуальное окружение:
+### Create and activate a virtual environment
 
 Windows:
 
@@ -33,7 +55,7 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-### Установить зависимости из файла requirements.txt:
+### Install dependencies from a file requirements.txt
 
 ```bash
 python3 -m pip install --upgrade pip
@@ -41,7 +63,7 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Выполнить миграции:
+### Make migrations
 
 Windows: 
 
@@ -55,7 +77,7 @@ macOS/Linux:
 python3 manage.py migrate
 ```
 
-### Запустить проект:
+### Launch
 
 Windows:
 
@@ -69,55 +91,65 @@ macOS/Linux:
 python3 manage.py runserver
 ```
 
-### Команды для загрузки данных из csv файлов
+### Commands for uploading data from csv files
 
 Windows:
 
 ```bash
-py manage.py csv_import --<команда> <адрес_файла>
+py manage.py csv_import --<command> <file path>
 
---ingredient - команда для загрузки ингредиентов из файла
+--ingredient - command to load ingredients 
 ```
 
 macOS/Linux:
 
 ```bash
-python3 manage.py csv_import --<команда> <адрес_файла>
+python3 manage.py csv_import --<command> <file path>
 
---ingredient - команда для загрузки ингредиентов из файла
+--ingredient - command to load ingredients 
 ```
 
-### Команды предзаполения объектами базы данных 
+### Commands for pre-filling database
 
 ```bash
-py manage.py loadata <название_файла>
+py manage.py loadata <filename>
 
-tags.json - команда для загрузки тегов
-users.json - команда для загрузки пользователей
+tags.json - сommand to load tags
+users.json - command to load users
 ```
 
-## Примеры запросов к API
+## Examples of API requests
 
-### Алгоритм регистрации пользователей
+### User registration algorithm
 
-1. Пользователь отправляет POST-запрос на добавление нового пользователя с параметрами email, password, username, first_name, last_name на эндпоинт /api/users/.
-2. Пользователь отправляет POST-запрос получение токен для аутентификации на эндпоинт api/token/login/. 
+1. The user sends a POST request to add a new user with the following parameters: email, password, username, first_name, last_name to the /api/users/ endpoint.
+2. The user sends a POST request to receive a token for authentication to the api/token/login/ endpoint.
 
-### Корневой эндпоинт API(ссылки на ресурсы, доступные в API):
+### API root endpoint (links to resources available in the API):
 
 [http://127.0.0.1:8000/api/](http://localhost/api/)
 
-Подробное описание в [Документации](http://localhost/api/docs/).
+Detailed description is in [Documentation](http://localhost/api/docs/).
 
-### Команды для запуска проекта в контейнерах:
+### Commands to launch the project in Docker containers:
 ```bash
-1. `docker-compose up -d --build` - сборка/пересборка контейнеров
-2. `winpty docker-compose exec django python manage.py makemigrations` - создание новых миграций
-3. `winpty docker-compose exec django python manage.py migrate` - применение миграций
-4. `winpty docker-compose exec django python manage.py createsuperuser` - создание суперпользователя
-5. `winpty docker-compose exec django python manage.py collectstatic --no-input` - собрать статические файлы
-6. `docker-compose down -v` - остановка контейнеров и удаление зависимостей
+1. `docker-compose up -d --build` - building/rebuilding containers
+2. `winpty docker-compose exec django python manage.py makemigrations` - creating migrations
+3. `winpty docker-compose exec django python manage.py migrate` - making migration
+4. `winpty docker-compose exec django python manage.py createsuperuser` - creation of superuser
+5. `winpty docker-compose exec django python manage.py collectstatic --no-input` - collecting static files
+6. `docker-compose down -v` - stopping the container and removing dependecies
 ```
-http://84.201.177.249/ - ссылка на развернутый в котейнерах проект на сервере
 
-![example workflow](https://github.com/Kiselaw/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+## Project status
+
+At the moment, it is planned to remove SerializerMethodField from sterilizers and search for a more correct and "beautiful" solution.
+
+http://84.201.177.249/ - link to the deployed project
+
+## License
+
+MIT
+
+
+![Foodgram workflow](https://github.com/Kiselaw/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
