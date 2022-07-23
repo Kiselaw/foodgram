@@ -12,6 +12,8 @@ Users can:
 - filter recipes by tags
 - add recipes to favorites and shopping list (which can be downloaded as a txt file)
 
+In addition, the Foodgram project has CI/CD which is implemented via using the Github Actions, so when push happens, the code is automatically tested and deployed to a remote server.
+
 ## Technologies
 Backend:
 
